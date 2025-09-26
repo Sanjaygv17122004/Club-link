@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,16 +8,35 @@ import { Label } from "@/components/ui/label";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 
 const SignIn = () => {
+
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
+    role: "user"
   });
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement authentication logic
-    console.log("Sign in:", formData);
+    // Simple default user logic
+    // Default users:
+    // user: user@email.com / password: user123
+    // moderator: mod@email.com / password: mod123
+    // admin: admin@email.com / password: admin123
+    let dashboardPath = "/dashboard/user";
+    if (formData.role === "moderator") dashboardPath = "/dashboard/moderator";
+    if (formData.role === "admin") dashboardPath = "/dashboard/admin";
+    // Simulate login (no real auth)
+    if (
+      (formData.role === "user" && formData.email === "user@email.com" && formData.password === "user123") ||
+      (formData.role === "moderator" && formData.email === "mod@email.com" && formData.password === "mod123") ||
+      (formData.role === "admin" && formData.email === "admin@email.com" && formData.password === "admin123")
+    ) {
+      navigate(dashboardPath);
+    } else {
+      alert("Invalid credentials for selected role.");
+    }
   };
 
   return (
@@ -35,7 +55,7 @@ const SignIn = () => {
         <Card className="bg-card/95 backdrop-blur border-border">
           <CardHeader className="text-center space-y-2">
             <div className="mx-auto mb-4">
-              <h1 className="text-3xl font-orbitron font-bold text-primary neon-text-glow">
+              <h1 className="text-3xl font-orbitron font-bold text-primary neon-text">
                 ClubLink
               </h1>
             </div>
@@ -49,12 +69,27 @@ const SignIn = () => {
 
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
+
+              <div className="space-y-2">
+                <Label htmlFor="role">Role</Label>
+                <select
+                  id="role"
+                  className="w-full rounded border px-3 py-2 bg-background border-border focus:border-primary"
+                  value={formData.role}
+                  onChange={e => setFormData({ ...formData, role: e.target.value })}
+                >
+                  <option value="user">User</option>
+                  <option value="moderator">Moderator</option>
+                  
+                </select>
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="your@email.com"
+                  placeholder="user@email.com, mod@email.com, admin@email.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="bg-background border-border focus:border-primary"
@@ -68,7 +103,13 @@ const SignIn = () => {
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
+                    placeholder={
+                      formData.role === "user"
+                        ? "user123"
+                        : formData.role === "moderator"
+                        ? "mod123"
+                        : "admin123"
+                    }
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     className="bg-background border-border focus:border-primary pr-10"
@@ -94,6 +135,7 @@ const SignIn = () => {
                 <Link 
                   to="/forgot-password" 
                   className="text-sm text-primary hover:text-primary/80 transition-colors"
+                  title="Reset your password if you forgot it"
                 >
                   Forgot Password?
                 </Link>
@@ -101,7 +143,7 @@ const SignIn = () => {
 
               <Button 
                 type="submit" 
-                className="w-full neon-glow"
+                className="w-full neon"
                 size="lg"
               >
                 Sign In

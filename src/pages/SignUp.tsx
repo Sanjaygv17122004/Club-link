@@ -64,7 +64,7 @@ const SignUp = () => {
         <Card className="bg-card/95 backdrop-blur border-border">
           <CardHeader className="text-center space-y-2">
             <div className="mx-auto mb-4">
-              <h1 className="text-3xl font-orbitron font-bold text-primary neon-text-glow">
+              <h1 className="text-3xl font-orbitron font-bold text-primary neon-text">
                 ClubLink
               </h1>
             </div>
@@ -221,7 +221,7 @@ const SignUp = () => {
 
               <Button 
                 type="submit" 
-                className="w-full neon-glow"
+                className="w-full neon"
                 size="lg"
                 disabled={passwordStrength.score < 80 || !passwordMatch || !formData.role}
               >
@@ -232,7 +232,7 @@ const SignUp = () => {
                 Already have an account?{" "}
                 <Link 
                   to="/signin" 
-                  className="text-primary hover:text-primary/80 transition-colors font-medium"
+                  className="text-primary hover:text-primary/80 transition-colors font-medium-glow"
                 >
                   Sign in
                 </Link>

@@ -29,7 +29,7 @@ const Landing = () => {
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center space-x-2">
-            <h1 className="text-2xl font-orbitron font-bold text-primary neon-text-glow">
+            <h1 className="text-2xl font-orbitron font-bold text-primary ">
               ClubLink
             </h1>
           </div>
@@ -39,7 +39,7 @@ const Landing = () => {
               <Button variant="ghost">Sign In</Button>
             </Link>
             <Link to="/signup">
-              <Button className="neon-glow">Get Started</Button>
+              <Button className="neon">Get Started</Button>
             </Link>
           </div>
         </div>
@@ -52,7 +52,7 @@ const Landing = () => {
           <div className="text-center space-y-8 animate-fade-in">
             <div className="space-y-4">
               <h1 className="text-6xl md:text-8xl font-orbitron font-bold tracking-tight">
-                <span className="text-primary neon-text-glow">Club</span>
+                <span className="text-primary ">Club</span>
                 <span className="text-foreground">Link</span>
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
@@ -65,7 +65,7 @@ const Landing = () => {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link to="/signup">
-                <Button size="lg" className="neon-glow animate-pulse-glow group">
+                <Button size="lg" className=" animate-pulse group">
                   Get Started
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
@@ -80,22 +80,7 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* About Section */}
-      <section className="py-20 cyber-gradient">
-        <div className="container">
-          <div className="text-center space-y-8">
-            <h2 className="text-4xl font-orbitron font-bold">
-              Revolutionizing Club Management
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-4xl mx-auto">
-              ClubLink is designed to bridge the gap between students and college organizations, 
-              creating a unified platform where discovery, engagement, and management happen seamlessly. 
-              Whether you're looking to join a club, organize events, or manage memberships, 
-              ClubLink provides the tools you need to connect beyond traditional limits.
-            </p>
-          </div>
-        </div>
-      </section>
+  
 
       {/* Features Section */}
       <section className="py-20">

@@ -24,7 +24,6 @@ import {
   Building2,
   Trash2
 } from "lucide-react";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 interface AppSidebarProps {
   userRole: "user" | "moderator" | "admin";
@@ -39,24 +38,27 @@ export function AppSidebar({ userRole }: AppSidebarProps) {
   const isCollapsed = state === "collapsed";
 
   const userItems = [
-    { title: "Discover Clubs", url: "/dashboard/discover", icon: Search },
-    { title: "Activities/Events", url: "/dashboard/events", icon: Calendar },
-    { title: "Profile", url: "/dashboard/profile", icon: User },
-    { title: "Join Application", url: "/dashboard/apply", icon: FileText },
-    { title: "Settings", url: "/dashboard/settings", icon: Settings },
+    { title: "Discover Clubs", url: "/dashboard/user/discover", icon: Search },
+    { title: "Activities/Events", url: "/dashboard/user/events", icon: Calendar },
+    { title: "Join Application", url: "/dashboard/user/apply", icon: FileText },
+    { title: "Settings", url: "/dashboard/user/settings", icon: Settings },
+    { title: "Profile", url: "/dashboard/user/profile", icon: User },
   ];
 
   const moderatorItems = [
-    ...userItems,
-    { title: "Create Events", url: "/dashboard/create-event", icon: Plus },
+    { title: "Create Events", url: "/dashboard/moderator/create-event", icon: Plus },
+    { title: "Discover Clubs", url: "/dashboard/moderator/discover", icon: Search },
+    { title: "Activities/Events", url: "/dashboard/moderator/events", icon: Calendar },
+    { title: "Profile", url: "/dashboard/moderator/profile", icon: User },
+    { title: "Settings", url: "/dashboard/moderator/settings", icon: Settings },
   ];
 
   const adminItems = [
-    { title: "Add Club", url: "/dashboard/add-club", icon: Building2 },
-    { title: "Remove Club", url: "/dashboard/remove-club", icon: Trash2 },
-    { title: "Manage Users", url: "/dashboard/manage-users", icon: Users },
-    { title: "Admin Profile", url: "/dashboard/admin-profile", icon: Shield },
-    { title: "Settings", url: "/dashboard/admin-settings", icon: Settings },
+    { title: "Add Club", url: "/dashboard/admin/add-club", icon: Building2 },
+    { title: "Remove Club", url: "/dashboard/admin/remove-club", icon: Trash2 },
+    { title: "Manage Users", url: "/dashboard/admin/manage-users", icon: Users },
+    { title: "Admin Profile", url: "/dashboard/admin/admin-profile", icon: Shield },
+    { title: "Settings", url: "/dashboard/admin/admin-settings", icon: Settings },
   ];
 
   const getMenuItems = () => {
@@ -77,24 +79,10 @@ export function AppSidebar({ userRole }: AppSidebarProps) {
       collapsible="icon"
       className="border-r border-sidebar-border"
     >
-      <SidebarContent className="bg-sidebar">
-        <div className="p-4 border-b border-sidebar-border">
-          {!isCollapsed && (
-            <h2 className="text-xl font-orbitron font-bold text-sidebar-primary neon-text-glow">
-              ClubLink
-            </h2>
-          )}
-          {isCollapsed && (
-            <div className="flex justify-center">
-              <span className="text-sidebar-primary font-orbitron font-bold text-lg neon-text-glow">
-                CL
-              </span>
-            </div>
-          )}
-        </div>
-
+      <SidebarContent className="bg-sidebar pt-16">
+        {/* Removed ClubLink heading */}
         <SidebarGroup className="flex-1">
-          <SidebarGroupLabel className="text-sidebar-foreground/70">
+          <SidebarGroupLabel className="text-sidebar-foreground/70 mt-2">
             {!isCollapsed && "Navigation"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -121,15 +109,7 @@ export function AppSidebar({ userRole }: AppSidebarProps) {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-
-        <div className="p-4 border-t border-sidebar-border">
-          <div className="flex items-center justify-between">
-            {!isCollapsed && (
-              <span className="text-sm text-sidebar-foreground/70">Theme</span>
-            )}
-            <ThemeToggle />
-          </div>
-        </div>
+        {/* Removed ThemeToggle */}
       </SidebarContent>
     </Sidebar>
   );
