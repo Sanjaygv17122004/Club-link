@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("user")
+  avatar    String?
+  bio       String?
+  location  String?
+  website   String?
+  skills    String?
+  notificationPreferences String? @default("email_push")
+  createdAt DateTime @default(now())
+  posts     Post[] @relation("UserPosts")
+  comments  Comment[] @relation("UserComments")
+  likes     Like[] @relation("UserLikes")
+  applications Application[] @relation("UserApplications")
+}
+
+model Club {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  photoUrl    String?
+  createdBy   Int
+  createdAt   DateTime @default(now())
+  events      Event[] @relation("ClubEvents")
+  applications Application[] @relation("ClubApplications")
+}
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  date        DateTime
+  location    String?
+  clubId      Int
+  createdAt   DateTime @default(now())
+  club        Club     @relation("ClubEvents", fields: [clubId], references: [id], onDelete: Cascade)
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  authorId  Int
+  content   String?
+  mediaUrl  String?
+  mediaType String? // "image" or "video"
+  createdAt DateTime @default(now())
+  likes     Like[] @relation("PostLikes")
+  comments  Comment[] @relation("PostComments")
+  author    User     @relation("UserPosts", fields: [authorId], references: [id])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  authorId  Int
+  content   String
+  createdAt DateTime @default(now())
+  post      Post     @relation("PostComments", fields: [postId], references: [id])
+  author    User     @relation("UserComments", fields: [authorId], references: [id])
+}
+
+model Like {
+  id       Int  @id @default(autoincrement())
+  postId   Int
+  userId   Int
+  createdAt DateTime @default(now())
+  post     Post @relation("PostLikes", fields: [postId], references: [id])
+  user     User @relation("UserLikes", fields: [userId], references: [id])
+}
+
+model Application {
+  id       Int @id @default(autoincrement())
+  userId   Int
+  clubId   Int
+  status   String @default("pending")
+  createdAt DateTime @default(now())
+  user     User @relation("UserApplications", fields: [userId], references: [id])
+  club     Club @relation("ClubApplications", fields: [clubId], references: [id], onDelete: Cascade)
+}
