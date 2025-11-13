@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { apiFetch } from "@/lib/api";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -53,11 +55,9 @@ const SignUp = () => {
           body: JSON.stringify({ name: formData.fullName, email: formData.email, password: formData.password, role: formData.role || 'user' }),
         });
         const { token, user } = res;
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
-        // redirect to dashboard per role
+        auth.setAuth(token, user);
         const path = user.role === 'moderator' ? '/dashboard/moderator' : '/dashboard/user';
-        window.location.href = path;
+        navigate(path);
       } catch (err: any) {
         const message = err?.body?.error || err?.message || 'Sign up failed';
         alert(message);

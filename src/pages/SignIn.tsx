@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { apiFetch } from "@/lib/api";
+import { AuthContext } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,7 @@ const SignIn = () => {
     role: "user"
   });
   const navigate = useNavigate();
+  const auth = useContext(AuthContext) as any;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,9 +31,8 @@ const SignIn = () => {
           body: JSON.stringify({ email: formData.email, password: formData.password }),
         });
         const { token, user } = res;
-        // store auth token and user
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
+        // store auth token and user via context
+        try { auth.setAuth(token, user); } catch (e) { localStorage.setItem('token', token); localStorage.setItem('user', JSON.stringify(user)); }
         let dashboardPath = '/dashboard/user';
         if (user.role === 'moderator') dashboardPath = '/dashboard/moderator';
         if (user.role === 'admin') dashboardPath = '/dashboard/admin';
@@ -84,6 +85,7 @@ const SignIn = () => {
                 >
                   <option value="user">User</option>
                   <option value="moderator">Moderator</option>
+                  <option value="admin">Admin</option>
                   
                 </select>
               </div>
