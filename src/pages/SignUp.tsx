@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { apiFetch } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -44,8 +45,24 @@ const SignUp = () => {
     if (formData.password !== formData.confirmPassword) {
       return;
     }
-    // TODO: Implement authentication logic
-    console.log("Sign up:", formData);
+    (async () => {
+      try {
+        const res: any = await apiFetch('/api/auth/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: formData.fullName, email: formData.email, password: formData.password, role: formData.role || 'user' }),
+        });
+        const { token, user } = res;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        // redirect to dashboard per role
+        const path = user.role === 'moderator' ? '/dashboard/moderator' : '/dashboard/user';
+        window.location.href = path;
+      } catch (err: any) {
+        const message = err?.body?.error || err?.message || 'Sign up failed';
+        alert(message);
+      }
+    })();
   };
 
   return (

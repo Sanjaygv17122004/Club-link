@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { apiFetch } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -19,24 +20,27 @@ const SignIn = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simple default user logic
-    // Default users:
-    // user: user@email.com / password: user123
-    // moderator: mod@email.com / password: mod123
-    // admin: admin@email.com / password: admin123
-    let dashboardPath = "/dashboard/user";
-    if (formData.role === "moderator") dashboardPath = "/dashboard/moderator";
-    if (formData.role === "admin") dashboardPath = "/dashboard/admin";
-    // Simulate login (no real auth)
-    if (
-      (formData.role === "user" && formData.email === "user@email.com" && formData.password === "user123") ||
-      (formData.role === "moderator" && formData.email === "mod@email.com" && formData.password === "mod123") ||
-      (formData.role === "admin" && formData.email === "admin@email.com" && formData.password === "admin123")
-    ) {
-      navigate(dashboardPath);
-    } else {
-      alert("Invalid credentials for selected role.");
-    }
+    // Call backend signin
+    (async () => {
+      try {
+        const res: any = await apiFetch('/api/auth/signin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: formData.email, password: formData.password }),
+        });
+        const { token, user } = res;
+        // store auth token and user
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        let dashboardPath = '/dashboard/user';
+        if (user.role === 'moderator') dashboardPath = '/dashboard/moderator';
+        if (user.role === 'admin') dashboardPath = '/dashboard/admin';
+        navigate(dashboardPath);
+      } catch (err: any) {
+        const message = err?.body?.error || err?.message || 'Sign in failed';
+        alert(message);
+      }
+    })();
   };
 
   return (
