@@ -26,5 +26,13 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "../src/tsconfig.node.j, "../src/main.tsx"son", "../src/vite-env.d.ts", "../src/vite.config.ts", "tsconfig.json", "../src/index.js"]
+  "include": [
+    "src",
+    "../src/tsconfig.node.json",
+    "../src/main.tsx",
+    "../src/vite-env.d.ts",
+    "../src/vite.config.ts",
+    "tsconfig.json",
+    "../src/index.js"
+  ]
 }

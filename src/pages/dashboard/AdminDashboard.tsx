@@ -7,8 +7,12 @@ import { Bell } from "lucide-react";
 
 import AddClub from "./AddClub";
 import RemoveClub from "./RemoveClub";
+import AdminApplications from "./AdminApplications";
+import ClubDetails from "./ClubDetails";
+import AdminClubIndex from "./AdminClubIndex";
 import ManageUsers from "./ManageUsers";
 import AdminProfile from "./AdminProfile";
+import Events from "./Events"
 import AdminSettings from "./AdminSettings";
 
 const AdminDashboard = () => {
@@ -16,7 +20,7 @@ const AdminDashboard = () => {
     <SidebarProvider>
       <Header1 />
       <div className="min-h-screen flex w-full bg-background pt-16">
-        <AppSidebar userRole="user" />
+        <AppSidebar userRole="admin" />
         <div className="flex-1 flex flex-col">
           <header className="h-16 border-b border-border bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50">
             <div className="flex items-center justify-between h-full px-6">
@@ -31,6 +35,10 @@ const AdminDashboard = () => {
             <Routes>
               <Route path="add-club" element={<AddClub />} />
               <Route path="remove-club" element={<RemoveClub />} />
+              <Route path="club" element={<AdminClubIndex />} />
+              <Route path="events" element={<Events />} />
+              <Route path="club/:id" element={<ClubDetails />} />
+              <Route path="applications" element={<AdminApplications />} />
               <Route path="manage-users" element={<ManageUsers />} />
               <Route path="admin-profile" element={<AdminProfile />} />
               <Route path="admin-settings" element={<AdminSettings />} />

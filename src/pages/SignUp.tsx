@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { apiFetch } from "@/lib/api";
 import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
+import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -21,12 +22,14 @@ const SignUp = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "" as UserRole | ""
+    role: "user" as UserRole | ""
   });
 
   const passwordStrength = calculatePasswordStrength(formData.password);
   const passwordMatch = formData.password === formData.confirmPassword && formData.confirmPassword !== "";
-
+  
+  const navigate = useNavigate();
+  const auth = useContext(AuthContext) as any;
   function calculatePasswordStrength(password: string) {
     if (!password) return { score: 0, requirements: [] };
     
@@ -60,7 +63,7 @@ const SignUp = () => {
         navigate(path);
       } catch (err: any) {
         const message = err?.body?.error || err?.message || 'Sign up failed';
-        alert(message);
+        try { toast({ title: 'Sign up failed', description: message }); } catch (e) { alert(message); }
       }
     })();
   };
@@ -240,7 +243,7 @@ const SignUp = () => {
                 type="submit" 
                 className="w-full neon"
                 size="lg"
-                disabled={passwordStrength.score < 80 || !passwordMatch || !formData.role}
+                disabled={passwordStrength.score < 80 || !passwordMatch}
               >
                 Sign Up
               </Button>

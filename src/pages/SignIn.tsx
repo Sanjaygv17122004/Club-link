@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { apiFetch } from "@/lib/api";
 import { AuthContext } from "@/context/AuthContext";
+import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -39,7 +40,7 @@ const SignIn = () => {
         navigate(dashboardPath);
       } catch (err: any) {
         const message = err?.body?.error || err?.message || 'Sign in failed';
-        alert(message);
+        try { toast({ title: 'Sign in failed', description: message }); } catch (e) { alert(message); }
       }
     })();
   };

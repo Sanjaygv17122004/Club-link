@@ -73,14 +73,17 @@ router.post('/:id/like', requireAuth, async (req: any, res) => {
   }
 });
 
-// delete a post (only author can delete)
+// delete a post (author or admin can delete)
 router.delete('/:id', requireAuth, async (req: any, res) => {
   try {
     const postId = Number(req.params.id);
     const userId = Number(req.user?.id);
     const post = await prisma.post.findUnique({ where: { id: postId } });
     if (!post) return res.status(404).json({ error: 'Post not found' });
-    if (post.authorId !== userId) return res.status(403).json({ error: 'Forbidden' });
+    // allow deletion if author or admin
+    const isAuthor = post.authorId === userId;
+    const isAdmin = req.user?.role === 'admin';
+    if (!isAuthor && !isAdmin) return res.status(403).json({ error: 'Forbidden' });
 
     // delete dependent records first
     await prisma.comment.deleteMany({ where: { postId } });

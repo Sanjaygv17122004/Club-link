@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import useAuth from '@/hooks/useAuth';
 import { apiFetch } from '@/lib/api';
+import { toast } from '@/hooks/use-toast';
+import { ToastAction } from '@/components/ui/toast';
 
 type Club = {
   id: number;
@@ -27,15 +29,32 @@ const RemoveClub: React.FC = () => {
       .finally(() => setLoading(false));
   }, [auth?.user]);
 
-  const handleRemove = async (id: number, name: string) => {
-    if (!confirm(`Delete club "${name}"? This action cannot be undone.`)) return;
-    setError(null);
-    try {
-      await apiFetch(`/api/admin/clubs/${id}`, { method: 'DELETE' });
-      setClubs((prev) => prev.filter((c) => c.id !== id));
-    } catch (err: any) {
-      setError(err?.body?.error || err?.message || 'Failed to remove club');
-    }
+  const handleRemove = (id: number, name: string) => {
+    // show a toast with an action button that performs the deletion
+    const t = toast({
+      title: 'Confirm delete',
+      description: `Delete club "${name}"? This action cannot be undone.`,
+      action: (
+        <ToastAction asChild>
+          <button
+            onClick={async () => {
+              try {
+                // dismiss the confirm toast
+                t.dismiss();
+                await apiFetch(`/api/admin/clubs/${id}`, { method: 'DELETE' });
+                setClubs((prev) => prev.filter((c) => c.id !== id));
+                toast({ title: 'Club removed', description: `"${name}" has been deleted.` });
+              } catch (err: any) {
+                toast({ title: 'Remove failed', description: err?.body?.error || err?.message || 'Failed to remove club', variant: 'destructive' });
+              }
+            }}
+            className="px-3 py-1 rounded bg-red-600 text-white text-xs"
+          >
+            Delete
+          </button>
+        </ToastAction>
+      ),
+    });
   };
 
   if (!auth?.user || auth.user.role !== 'admin') {

@@ -9,6 +9,7 @@ import Events from "./Events";
 import Profile from "./Profile";
 import JoinApplication from "./JoinApplication";
 import DashboardSettings from "./DashboardSettings";
+import ClubDetails from "./ClubDetails";
 
 const UserDashboard = () => {
   return (
@@ -32,6 +33,7 @@ const UserDashboard = () => {
               <Route path="discover" element={<DiscoverClubs />} />
               <Route path="events" element={<Events />} />
               <Route path="apply" element={<JoinApplication />} />
+              <Route path="club/:id" element={<ClubDetails />} />
               <Route path="settings" element={<DashboardSettings />} />
               <Route path="profile" element={<Profile />} />
               <Route path="*" element={<DiscoverClubs />} />

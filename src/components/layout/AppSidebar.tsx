@@ -24,6 +24,7 @@ import {
   Building2,
   Trash2
 } from "lucide-react";
+import { title } from "process";
 
 interface AppSidebarProps {
   userRole: "user" | "moderator" | "admin";
@@ -34,7 +35,14 @@ export function AppSidebar({ userRole }: AppSidebarProps) {
   const location = useLocation();
   const currentPath = location.pathname;
 
-  const isActive = (path: string) => currentPath === path;
+  // consider a menu item active if the current path equals the item url
+  // or if the current path starts with the item url (for dynamic routes like club/:id)
+  const isActive = (path: string) => {
+    if (!path) return false;
+    if (currentPath === path) return true;
+    const normalized = path.endsWith('/') ? path.slice(0, -1) : path;
+    return currentPath === normalized || currentPath.startsWith(normalized + '/') || currentPath.startsWith(normalized);
+  };
   const isCollapsed = state === "collapsed";
 
   const userItems = [
@@ -54,11 +62,15 @@ export function AppSidebar({ userRole }: AppSidebarProps) {
   ];
 
   const adminItems = [
+    { title: "Events", url: "/dashboard/admin/events", icon: Calendar },
     { title: "Add Club", url: "/dashboard/admin/add-club", icon: Building2 },
     { title: "Remove Club", url: "/dashboard/admin/remove-club", icon: Trash2 },
+    { title: "Club Details", url: "/dashboard/admin/club", icon: Shield },
+    { title: "Applications", url: "/dashboard/admin/applications", icon: FileText },
     { title: "Manage Users", url: "/dashboard/admin/manage-users", icon: Users },
-    { title: "Admin Profile", url: "/dashboard/admin/admin-profile", icon: Shield },
     { title: "Settings", url: "/dashboard/admin/admin-settings", icon: Settings },
+    { title: "Admin Profile", url: "/dashboard/admin/admin-profile", icon: Shield },
+   
   ];
 
   const getMenuItems = () => {
@@ -92,13 +104,13 @@ export function AppSidebar({ userRole }: AppSidebarProps) {
                   <SidebarMenuButton asChild>
                     <NavLink
                       to={item.url}
-                      className={({ isActive }) =>
-                        `flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
-                          isActive
-                            ? "bg-sidebar-accent text-sidebar-primary border border-sidebar-primary/20"
-                            : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-primary"
-                        }`
-                      }
+                      className={() =>
+                          `flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                            isActive(item.url)
+                              ? "bg-sidebar-accent text-sidebar-primary border border-sidebar-primary/20"
+                              : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-primary"
+                          }`
+                        }
                     >
                       <item.icon className="h-5 w-5 flex-shrink-0" />
                       {!isCollapsed && <span className="font-medium">{item.title}</span>}
