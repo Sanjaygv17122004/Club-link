@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { Button } from '@/components/ui/button';
+import { Eye } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 
@@ -34,13 +35,23 @@ const AdminClubIndex = () => {
 
         <ul className="space-y-3 mt-3">
           {clubs.map(c => (
-            <li key={c.id} className="p-3 rounded bg-background border flex items-center justify-between">
-              <div>
-                <div className="font-medium">{c.name}</div>
-                {c.description && <div className="text-xs text-muted-foreground">{c.description}</div>}
+            <li key={c.id} className="p-3 rounded bg-background border hover:shadow-sm flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                {c.photoUrl ? (
+                  <img src={c.photoUrl} alt={c.name} className="w-14 h-14 rounded-md object-cover" />
+                ) : (
+                  <div className="w-14 h-14 rounded-md bg-muted flex items-center justify-center text-lg font-semibold text-foreground">{c.name?.charAt(0)}</div>
+                )}
+                <div>
+                  <div className="text-xl sm:text-2xl font-orbitron font-bold text-foreground">{c.name}</div>
+                  {c.description && <div className="text-sm text-muted-foreground mt-1 max-w-xl">{c.description}</div>}
+                </div>
               </div>
               <div className="flex items-center space-x-2">
-                <Button size="sm" onClick={() => navigate(`/dashboard/admin/club/${c.id}`)}>Open</Button>
+                <Button size="sm" onClick={() => navigate(`/dashboard/admin/club/${c.id}`)} className="flex items-center space-x-2">
+                  <Eye className="w-4 h-4" />
+                  <span>View</span>
+                </Button>
               </div>
             </li>
           ))}

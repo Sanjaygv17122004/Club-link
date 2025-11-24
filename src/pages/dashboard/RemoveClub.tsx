@@ -3,6 +3,7 @@ import useAuth from '@/hooks/useAuth';
 import { apiFetch } from '@/lib/api';
 import { toast } from '@/hooks/use-toast';
 import { ToastAction } from '@/components/ui/toast';
+import { Trash2 } from 'lucide-react';
 
 type Club = {
   id: number;
@@ -67,12 +68,12 @@ const RemoveClub: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 max-w-xl mx-auto py-8">
-      <h1 className="text-3xl font-orbitron font-bold">Remove Club</h1>
-      <p className="text-muted-foreground">Manage and remove existing clubs from the platform.</p>
+    <div className="w-[80%] min-h-half mx-auto px-6 lg:px-12 py-10">
+      <h1 className="text-3xl sm:text-3.5xl font-orbitron font-extrabold">Remove Club</h1>
+      <p className="text-muted-foreground text-lg mt-2">Manage and remove existing clubs from the platform.</p>
 
-      <div className="rounded-lg border bg-card p-6 space-y-4 shadow-sm">
-        <h2 className="text-lg font-semibold mb-2">Existing Clubs</h2>
+      <div className="mt-6 rounded-lg border bg-card p-6 space-y-6 shadow-sm">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-2">Existing Clubs</h2>
 
         {loading && <div className="text-sm text-muted-foreground">Loading clubs…</div>}
         {error && <div className="text-sm text-destructive">{error}</div>}
@@ -81,20 +82,29 @@ const RemoveClub: React.FC = () => {
           <div className="text-sm text-muted-foreground">No clubs found.</div>
         )}
 
-        <ul className="space-y-2">
+        <ul className="space-y-4">
           {clubs.map((club) => (
-            <li key={club.id} className="flex items-center justify-between p-3 rounded bg-background border">
-              <div>
-                <div className="font-medium">{club.name}</div>
-                {club.description && <div className="text-xs text-muted-foreground">{club.description}</div>}
-                {club.createdAt && <div className="text-xs text-muted-foreground">Created: {new Date(club.createdAt).toLocaleString()}</div>}
+            <li key={club.id} className="w-full p-4 rounded-lg bg-background border hover:shadow-md flex items-center justify-between">
+              <div className="flex items-center space-x-6">
+                {club.photoUrl ? (
+                  <img src={club.photoUrl} alt={club.name} className="w-16 h-16 rounded-lg object-cover" />
+                ) : (
+                  <div className="w-16 h-16 rounded-lg bg-muted flex items-center justify-center text-lg font-bold text-foreground">{club.name?.charAt(0)}</div>
+                )}
+                <div>
+                  <div className="text-xl lg:text-2xl font-orbitron tracking-tight text-foreground">{club.name}</div>
+                  {club.description && <div className="text-sm text-muted-foreground mt-1 max-w-3xl">{club.description}</div>}
+                  {club.createdAt && <div className="text-xs text-muted-foreground mt-1">Created: {new Date(club.createdAt).toLocaleString()}</div>}
+                </div>
               </div>
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => handleRemove(club.id, club.name)}
-                  className="px-3 py-1 rounded bg-red-600 text-white text-xs"
+                  aria-label={`Remove ${club.name}`}
+                  title="Remove club"
+                  className="p-2 rounded-md hover:bg-red-600/10"
                 >
-                  Remove
+                  <Trash2 className="w-5 h-5 text-destructive" />
                 </button>
               </div>
             </li>

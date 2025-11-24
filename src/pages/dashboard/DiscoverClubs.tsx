@@ -68,7 +68,7 @@ const DiscoverClubs = () => {
             <h2 className="text-xl font-semibold text-primary mb-1">{club.name}</h2>
             <p className="text-muted-foreground mb-2">{club.description}</p>
             <div className="flex items-center justify-between mt-4">
-              <Button variant="secondary" size="sm" onClick={() => navigate(`/clubs/${club.id}`)}>View</Button>
+              
               {appliedClubIds.includes(club.id) ? (
                 <span className="text-sm text-muted-foreground">Applied</span>
               ) : (

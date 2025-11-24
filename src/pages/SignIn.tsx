@@ -16,7 +16,6 @@ const SignIn = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    role: "user"
   });
   const navigate = useNavigate();
   const auth = useContext(AuthContext) as any;
@@ -76,20 +75,7 @@ const SignIn = () => {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
 
-              <div className="space-y-2">
-                <Label htmlFor="role">Role</Label>
-                <select
-                  id="role"
-                  className="w-full rounded border px-3 py-2 bg-background border-border focus:border-primary"
-                  value={formData.role}
-                  onChange={e => setFormData({ ...formData, role: e.target.value })}
-                >
-                  <option value="user">User</option>
-                  <option value="moderator">Moderator</option>
-                  <option value="admin">Admin</option>
-                  
-                </select>
-              </div>
+              {/* Role selection removed: admins should sign in with their registered account without selecting a role */}
 
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
@@ -110,13 +96,7 @@ const SignIn = () => {
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder={
-                      formData.role === "user"
-                        ? "user123"
-                        : formData.role === "moderator"
-                        ? "mod123"
-                        : "admin123"
-                    }
+                    placeholder="Enter your password"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     className="bg-background border-border focus:border-primary pr-10"

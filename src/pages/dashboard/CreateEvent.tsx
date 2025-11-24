@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { apiFetch } from '@/lib/api';
+import { apiFetch, API_BASE } from '@/lib/api';
 import { AuthContext } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
@@ -38,8 +38,11 @@ const CreateEvent = () => {
     try {
       const fd = new FormData();
       fd.append('file', file);
-      const res = await fetch((import.meta.env.VITE_API_URL ?? '') + '/api/uploads', { method: 'POST', body: fd });
+      const base = API_BASE || (import.meta.env.VITE_API_URL ?? '');
+      const uploadUrl = base.endsWith('/') ? `${base}api/uploads` : `${base}/api/uploads`;
+      const res = await fetch(uploadUrl, { method: 'POST', body: fd });
       const json = await res.json();
+      console.debug('upload response', res.status, json);
       if (!res.ok) throw new Error(json?.error || 'Upload failed');
       // prefer absoluteUrl if provided
       return json?.data?.absoluteUrl || json?.data?.url || null;
