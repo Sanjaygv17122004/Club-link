@@ -10,14 +10,14 @@ export function Toaster() {
         // Defensive: ensure title/description are safe for Radix internals which may assume string-like values
         const renderTitle = () => {
           if (title === undefined || title === null) return null;
-          if (typeof title === 'string' || typeof title === 'number') return <ToastTitle>{String(title)}</ToastTitle>;
-          return <ToastTitle>{title as any}</ToastTitle>;
+          // Coerce to string to avoid Radix internals calling string methods on non-string values
+          return <ToastTitle>{typeof title === 'string' || typeof title === 'number' ? String(title) : String(title)}</ToastTitle>;
         };
 
         const renderDescription = () => {
           if (description === undefined || description === null) return null;
-          if (typeof description === 'string' || typeof description === 'number') return <ToastDescription>{String(description)}</ToastDescription>;
-          return <ToastDescription>{description as any}</ToastDescription>;
+          // Coerce to string to avoid Radix internals calling string methods on non-string values
+          return <ToastDescription>{typeof description === 'string' || typeof description === 'number' ? String(description) : String(description)}</ToastDescription>;
         };
 
         return (

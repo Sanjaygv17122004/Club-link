@@ -32,27 +32,40 @@ const RemoveClub: React.FC = () => {
 
   const handleRemove = (id: number, name: string) => {
     // show a toast with an action button that performs the deletion
+    let doing = false;
+
+    const performDelete = async () => {
+      if (doing) return;
+      doing = true;
+      try {
+        await apiFetch(`/api/admin/clubs/${id}`, { method: 'DELETE' });
+        setClubs((prev) => prev.filter((c) => c.id !== id));
+        toast({ title: 'Club removed', description: `"${name}" has been deleted.` });
+      } catch (err: any) {
+        console.error('RemoveClub delete error', err);
+        toast({ title: 'Remove failed', description: err?.body?.error || err?.message || 'Failed to remove club', variant: 'destructive' });
+      } finally {
+        doing = false;
+      }
+    };
+
     const t = toast({
       title: 'Confirm delete',
       description: `Delete club "${name}"? This action cannot be undone.`,
       action: (
-        <ToastAction asChild>
-          <button
-            onClick={async () => {
-              try {
-                // dismiss the confirm toast
-                t.dismiss();
-                await apiFetch(`/api/admin/clubs/${id}`, { method: 'DELETE' });
-                setClubs((prev) => prev.filter((c) => c.id !== id));
-                toast({ title: 'Club removed', description: `"${name}" has been deleted.` });
-              } catch (err: any) {
-                toast({ title: 'Remove failed', description: err?.body?.error || err?.message || 'Failed to remove club', variant: 'destructive' });
-              }
-            }}
-            className="px-3 py-1 rounded bg-red-600 text-white text-xs"
-          >
-            Delete
-          </button>
+        <ToastAction
+          altText={`Delete ${name}`}
+          onClick={async () => {
+            try {
+              try { t?.dismiss && t.dismiss(); } catch (e) { /* ignore */ }
+              await performDelete();
+            } catch (err) {
+              console.error('Error running delete action', err);
+            }
+          }}
+          className="px-3 py-1 rounded bg-red-600 text-white text-xs"
+        >
+          Delete
         </ToastAction>
       ),
     });
